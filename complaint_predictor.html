@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Système de Classification des Réclamations - Algérie Télécom</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3a8a 0%, #059669 100%);
+            min-height: 100vh;
+            padding: 20px;
+            direction: rtl;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Header with Logos */
+        .header {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .logos-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .logo-box {
+            flex: 1;
+            text-align: center;
+            min-width: 150px;
+        }
+
+        .logo-box img {
+            max-width: 200px;
+            height: auto;
+            max-height: 100px;
+            object-fit: contain;
+        }
+
+        .header h1 {
+            text-align: center;
+            color: #1e3a8a;
+            font-size: 28px;
+            margin-top: 20px;
+            font-weight: 700;
+        }
+
+        .header p {
+            text-align: center;
+            color: #64748b;
+            margin-top: 10px;
+            font-size: 16px;
+        }
+
+        /* Main Card */
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            color: #1e3a8a;
+            font-size: 22px;
+            margin-bottom: 25px;
+            font-weight: 600;
+            border-right: 4px solid #059669;
+            padding-right: 15px;
+        }
+
+        /* Form Styles */
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            color: #334155;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input, select, textarea {
+            padding: 12px 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #059669;
+            box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+            font-family: inherit;
+        }
+
+        /* Button */
+        .btn-predict {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(5, 150, 105, 0.3);
+        }
+
+        .btn-predict:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(5, 150, 105, 0.4);
+        }
+
+        .btn-predict:active {
+            transform: translateY(0);
+        }
+
+        .btn-predict:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Result Section */
+        .result-section {
+            background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+            border: 2px solid #059669;
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 30px;
+            display: none;
+        }
+
+        .result-section.show {
+            display: block;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-title {
+            color: #059669;
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .result-action {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 18px;
+            color: #1e3a8a;
+            font-weight: 600;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            border: 3px solid #f3f4f6;
+            border-top: 3px solid #059669;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            color: white;
+            margin-top: 30px;
+            padding: 20px;
+            font-size: 14px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 22px;
+            }
+
+            .card {
+                padding: 25px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .logos-container {
+                flex-direction: column;
+            }
+
+            .logo-box img {
+                max-width: 150px;
+            }
+        }
+
+        /* Info Badge */
+        .info-badge {
+            background: #dbeafe;
+            color: #1e40af;
+            padding: 12px 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            font-size: 14px;
+            border-left: 4px solid #3b82f6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header with Logos -->
+        <div class="header">
+            <div class="logos-container">
+                <div class="logo-box">
+                    <img src="algtelecome.png" alt="Algérie Télécom">
+                </div>
+                <div class="logo-box">
+                    <img src="ic.png" alt="V2V ENSIA Incubator">
+                </div>
+            </div>
+            <h1>نظام تصنيف الشكاوى الذكي</h1>
+            <p>Système Intelligent de Classification des Réclamations</p>
+        </div>
+
+        <!-- Main Form Card -->
+        <div class="card">
+            <div class="info-badge">
+                ⓘ أدخل تفاصيل الشكوى وسيقوم النظام بالتنبؤ بالإجراء المناسب تلقائياً
+            </div>
+
+            <h2 class="section-title">معلومات الشكوى</h2>
+
+            <form id="complaintForm">
+                <!-- Row 1: Basic Info -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="categorie">تصنيف الشكوى *</label>
+                        <select id="categorie" required>
+                            <option value="">-- اختر التصنيف --</option>
+                            <option value="Coupure de ligne">Coupure de ligne (انقطاع الخط)</option>
+                            <option value="Internet lent">Internet lent (إنترنت بطيء)</option>
+                            <option value="Facturation">Facturation (الفواتير)</option>
+                            <option value="Télévision">Télévision (التلفزيون)</option>
+                            <option value="Installation">Installation (التركيب)</option>
+                            <option value="Configuration">Configuration (الإعدادات)</option>
+                            <option value="Assistance">Assistance (المساعدة)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="urgence">مستوى الاستعجال *</label>
+                        <select id="urgence" required>
+                            <option value="">-- اختر المستوى --</option>
+                            <option value="Critique">Critique (حرج)</option>
+                            <option value="élevée">Élevée (عالي)</option>
+                            <option value="Moyenne">Moyenne (متوسط)</option>
+                            <option value="Faible">Faible (منخفض)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Row 2: Sentiment & Channel -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="sentiment">المشاعر *</label>
+                        <select id="sentiment" required>
+                            <option value="">-- اختر --</option>
+                            <option value="Négatif">Négatif (سلبي)</option>
+                            <option value="Neutre">Neutre (محايد)</option>
+                            <option value="Positif">Positif (إيجابي)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="canal">قناة الاتصال *</label>
+                        <select id="canal" required>
+                            <option value="">-- اختر القناة --</option>
+                            <option value="Centre d'appel">Centre d'appel (مركز الاتصال)</option>
+                            <option value="Email">Email (البريد الإلكتروني)</option>
+                            <option value="Agence">Agence (الوكالة)</option>
+                            <option value="Site web">Site web (الموقع)</option>
+                            <option value="Réseaux sociaux">Réseaux sociaux (وسائل التواصل)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Row 3: Wilaya -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="wilaya">الولاية *</label>
+                        <select id="wilaya" required>
+                            <option value="">-- اختر الولاية --</option>
+                            <option value="Alger">Alger (الجزائر)</option>
+                            <option value="Oran">Oran (وهران)</option>
+                            <option value="Constantine">Constantine (قسنطينة)</option>
+                            <option value="Annaba">Annaba (عنابة)</option>
+                            <option value="Blida">Blida (البليدة)</option>
+                            <option value="Sétif">Sétif (سطيف)</option>
+                            <option value="Batna">Batna (باتنة)</option>
+                            <option value="Tlemcen">Tlemcen (تلمسان)</option>
+                            <option value="Béjaïa">Béjaïa (بجاية)</option>
+                            <option value="Tizi Ouzou">Tizi Ouzou (تيزي وزو)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Complaint Text -->
+                <div class="form-group">
+                    <label for="texte">نص الشكوى * (Arabic, Français, English)</label>
+                    <textarea id="texte" required placeholder="مثال بالعربية: الانترنت بطيء جداً منذ يومين، الكابل مقطوع
+Exemple en français: Internet très lent depuis 2 jours, cable coupé
+Example in English: Very slow internet for 2 days, cable cut"></textarea>
+                    <div style="font-size: 12px; color: #64748b; margin-top: 5px;">
+                        💡 يمكنك الكتابة بأي لغة - النظام يدعم العربية، الفرنسية، والإنجليزية
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn-predict" id="predictBtn">
+                    🔍 تحليل والتنبؤ بالإجراء
+                </button>
+            </form>
+
+            <!-- Result Section -->
+            <div class="result-section" id="resultSection">
+                <div class="result-title">
+                    <span style="font-size: 24px;">✅</span>
+                    <span>الإجراء المقترح</span>
+                </div>
+                <div class="result-action" id="resultAction"></div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>© 2026 Algérie Télécom - V2V ENSIA Incubator</p>
+            <p style="margin-top: 10px; font-size: 12px;">Développé pour un service client optimal</p>
+        </div>
+    </div>
+
+    <script>
+        // API Configuration
+        const API_URL = 'http://localhost:5000/api/predict';
+        document.getElementById('complaintForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('predictBtn');
+            const resultSection = document.getElementById('resultSection');
+            const resultAction = document.getElementById('resultAction');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span> جاري التحليل...';
+            resultSection.classList.remove('show');
+            
+            
+            const formData = {
+                categorie: document.getElementById('categorie').value,
+                urgence: document.getElementById('urgence').value,
+                sentiment: document.getElementById('sentiment').value,
+                canal: document.getElementById('canal').value,
+                wilaya: document.getElementById('wilaya').value,
+                texte_reclamation: document.getElementById('texte').value
+            };
+            
+            try {
+                
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    
+                    let resultHTML = `<strong>${result.prediction}</strong>`;
+                    
+                   
+                    if (result.language_detected) {
+                        const langEmoji = {
+                            'arabic': '🇩🇿',
+                            'french': '🇫🇷',
+                            'english': '🇬🇧'
+                        };
+                        const langName = {
+                            'arabic': 'العربية',
+                            'french': 'Français',
+                            'english': 'English'
+                        };
+                        resultHTML += `<div style="margin-top: 10px; font-size: 13px; color: #64748b;">
+                            ${langEmoji[result.language_detected] || '🌐'} اللغة المكتشفة: ${langName[result.language_detected] || result.language_detected}
+                        </div>`;
+                    }
+                    
+                   
+                    if (result.top_predictions && result.top_predictions.length > 0) {
+                        resultHTML += '<div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #e5e7eb;">';
+                        resultHTML += '<div style="font-size: 14px; color: #64748b; margin-bottom: 10px;">مستوى الثقة:</div>';
+                        result.top_predictions.forEach((pred, idx) => {
+                            const percentage = (pred.confidence * 100).toFixed(1);
+                            const barWidth = percentage;
+                            resultHTML += `
+                                <div style="margin-bottom: 8px;">
+                                    <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 3px;">
+                                        <span style="color: #475569;">${pred.action}</span>
+                                        <span style="color: #059669; font-weight: 600;">${percentage}%</span>
+                                    </div>
+                                    <div style="background: #e5e7eb; height: 6px; border-radius: 3px; overflow: hidden;">
+                                        <div style="background: linear-gradient(90deg, #059669, #047857); height: 100%; width: ${barWidth}%; transition: width 0.5s ease;"></div>
+                                    </div>
+                                </div>
+                            `;
+                        });
+                        resultHTML += '</div>';
+                    }
+                    
+                    resultAction.innerHTML = resultHTML;
+                    resultSection.classList.add('show');
+                } else {
+                    throw new Error(result.error || 'Prediction failed');
+                }
+                
+            } catch (error) {
+                console.error('Error:', error);
+                resultAction.innerHTML = `<span style="color: #dc2626;">❌ خطأ في التنبؤ: ${error.message}</span>`;
+                resultSection.classList.add('show');
+            } finally {
+                
+                btn.disabled = false;
+                btn.innerHTML = '🔍 تحليل والتنبؤ بالإجراء';
+                
+              
+                resultSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        });
+    </script>
+</body>
+</html>
