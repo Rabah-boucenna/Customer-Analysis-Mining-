@@ -247,9 +247,8 @@ def prepare_data(df, features):
     return transactions
 
 
-# ============================================================================
 # Exploring Data for FPGrowth
-# ============================================================================
+
 
 def explore_data(df, features):
     """
@@ -372,41 +371,218 @@ def get_default_template():
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>FP-Growth Results</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FP-Growth Analysis Results</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px; }
-        .container { max-width: 1200px; margin: 0 auto; background: white; border-radius: 10px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
-        .header { background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); color: white; padding: 40px; text-align: center; border-radius: 10px 10px 0 0; }
-        .content { padding: 30px; }
-        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin: 20px 0; }
-        .stat-card { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px 20px; border-radius: 10px; text-align: center; }
-        .stat-value { font-size: 3em; font-weight: bold; }
-        .stat-label { font-size: 0.95em; text-transform: uppercase; margin-top: 10px; }
-        h2 { color: #1e3c72; margin: 40px 0 20px 0; padding-bottom: 15px; border-bottom: 3px solid #667eea; }
-        .pattern { padding: 20px; margin: 15px 0; background: #f0f4ff; border-left: 5px solid #667eea; border-radius: 5px; }
-        .rule { padding: 20px; margin: 15px 0; background: white; border: 2px solid #e0e0e0; border-radius: 8px; }
-        .metrics { display: flex; gap: 15px; margin-top: 12px; flex-wrap: wrap; }
-        .metric { padding: 8px 18px; background: #e6edff; border-radius: 20px; font-size: 0.9em; }
-        .strong { font-weight: bold; color: #1e3c72; }
-        .no-data { text-align: center; padding: 40px; color: #666; font-style: italic; }
+        
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        
+        .container { 
+            max-width: 1400px; 
+            margin: 0 auto; 
+            background: white; 
+            border-radius: 20px; 
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header { 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white; 
+            padding: 60px 40px; 
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="40" fill="rgba(255,255,255,0.05)"/></svg>');
+            background-size: 100px 100px;
+        }
+        
+        .header h1 { 
+            font-size: 3em; 
+            font-weight: 700; 
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .header p { 
+            font-size: 1.2em; 
+            opacity: 0.95;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .content { padding: 50px 40px; }
+        
+        .stats { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+            gap: 30px; 
+            margin: 30px 0 50px 0;
+        }
+        
+        .stat-card { 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white; 
+            padding: 40px 30px; 
+            border-radius: 15px; 
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+        }
+        
+        .stat-value { 
+            font-size: 3.5em; 
+            font-weight: 700;
+            line-height: 1;
+        }
+        
+        .stat-label { 
+            font-size: 1em; 
+            text-transform: uppercase; 
+            margin-top: 15px;
+            letter-spacing: 2px;
+            opacity: 0.95;
+        }
+        
+        h2 { 
+            color: #1e3c72; 
+            margin: 60px 0 30px 0; 
+            padding-bottom: 20px; 
+            border-bottom: 4px solid #667eea;
+            font-size: 2em;
+            font-weight: 600;
+            position: relative;
+        }
+        
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100px;
+            height: 4px;
+            background: #764ba2;
+        }
+        
+        .pattern { 
+            padding: 25px 30px; 
+            margin: 20px 0; 
+            background: linear-gradient(135deg, #f0f4ff 0%, #e6edff 100%);
+            border-left: 6px solid #667eea; 
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .pattern:hover {
+            transform: translateX(5px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+        }
+        
+        .rule { 
+            padding: 25px 30px; 
+            margin: 20px 0; 
+            background: white;
+            border: 2px solid #e0e7ff; 
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: all 0.2s ease;
+        }
+        
+        .rule:hover {
+            border-color: #667eea;
+            box-shadow: 0 6px 25px rgba(102, 126, 234, 0.2);
+        }
+        
+        .metrics { 
+            display: flex; 
+            gap: 15px; 
+            margin-top: 15px; 
+            flex-wrap: wrap;
+        }
+        
+        .metric { 
+            padding: 10px 20px; 
+            background: linear-gradient(135deg, #e6edff 0%, #d9e4ff 100%);
+            border-radius: 25px; 
+            font-size: 0.9em;
+            font-weight: 500;
+            color: #1e3c72;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .strong { 
+            font-weight: 700; 
+            color: #667eea;
+            font-size: 1.1em;
+        }
+        
+        .no-data { 
+            text-align: center; 
+            padding: 60px 40px; 
+            color: #999; 
+            font-style: italic;
+            font-size: 1.1em;
+        }
+        
+        @media (max-width: 768px) {
+            body { padding: 20px 10px; }
+            .content { padding: 30px 20px; }
+            .header { padding: 40px 20px; }
+            .header h1 { font-size: 2em; }
+            .stat-value { font-size: 2.5em; }
+            h2 { font-size: 1.5em; }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>🔍 FP-Growth Analysis Results</h1>
-            <p>Pattern Mining and Association Rules</p>
+            <h1> FP-Growth Analysis Results</h1>
+            <p>Pattern Mining and Association Rules Discovery</p>
         </div>
         <div class="content">
             <div class="stats">
-                <div class="stat-card"><div class="stat-value">{{TOTAL_RECORDS}}</div><div class="stat-label">Records</div></div>
-                <div class="stat-card"><div class="stat-value">{{TOTAL_PATTERNS}}</div><div class="stat-label">Patterns</div></div>
-                <div class="stat-card"><div class="stat-value">{{TOTAL_RULES}}</div><div class="stat-label">Rules</div></div>
+                <div class="stat-card">
+                    <div class="stat-value">{{TOTAL_RECORDS}}</div>
+                    <div class="stat-label">Total Records</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">{{TOTAL_PATTERNS}}</div>
+                    <div class="stat-label">Patterns Found</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">{{TOTAL_RULES}}</div>
+                    <div class="stat-label">Rules Generated</div>
+                </div>
             </div>
-            <h2>📊 Frequent Patterns</h2>
+            
+            <h2> Frequent Patterns</h2>
             {{PATTERNS_CONTENT}}
-            <h2>🔗 Association Rules</h2>
+            
+            <h2> Association Rules</h2>
             {{RULES_CONTENT}}
         </div>
     </div>
