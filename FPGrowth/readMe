@@ -4,8 +4,6 @@
 
 This system implements the **FP-Growth (Frequent Pattern Growth) algorithm**, a powerful data mining technique for discovering patterns and relationships in large categorical datasets. It is designed to analyze datasets containing tens of thousands to hundreds of thousands of records efficiently.
 
----
-
 ## Purpose
 
 The primary purpose of this system is to **automatically discover hidden patterns and associations** in your data without requiring manual analysis. It answers questions like:
@@ -14,8 +12,6 @@ The primary purpose of this system is to **automatically discover hidden pattern
 - What relationships exist between different data attributes?
 - Can we predict one feature based on others?
 - What correlations exist in our dataset?
-
----
 
 ## Key Objectives
 
@@ -56,8 +52,6 @@ Provide clear, interpretable results that can inform business decisions, process
 - Data exploration mode to understand distributions before mining
 - Configurable sensitivity for finding more or fewer patterns
 - Performance optimization for datasets of any size
-
----
 
 ## How It Works
 

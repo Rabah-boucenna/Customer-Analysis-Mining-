@@ -258,9 +258,7 @@ def explore_data(df, features):
         Input data
     features : list
     """
-    print("\n" + "="*80)
     print("DATA EXPLORATION")
-    print("="*80)
     
     print(f"\nDataset: {len(df):,} records")
     print(f"Features: {features}")
@@ -592,9 +590,7 @@ def get_default_template():
 
 def print_top_patterns(patterns, n=10, total_records=None):
     """Pretty print top N patterns"""
-    print("\n" + "="*80)
     print(f"TOP {n} FREQUENT PATTERNS")
-    print("="*80)
     
     sorted_patterns = sorted(patterns.items(), key=lambda x: x[1], reverse=True)[:n]
     for i, (pattern, support) in enumerate(sorted_patterns, 1):
@@ -613,9 +609,8 @@ def print_top_rules(rules, n=10):
         print("\n No rules found")
         return
     
-    print("\n" + "="*80)
+    print("\n")
     print(f"TOP {n} ASSOCIATION RULES (by Lift)")
-    print("="*80)
     
     sorted_rules = sorted(rules, key=lambda x: x['lift'], reverse=True)[:n]
     for i, rule in enumerate(sorted_rules, 1):
