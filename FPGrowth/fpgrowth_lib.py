@@ -291,9 +291,7 @@ def suggest_parameters(total_records, sample_size=None):
     min_support_low = max(5, int(actual_size * 0.005))
     min_support_high = max(10, int(actual_size * 0.02))
     
-    print("\n" + "="*80)
     print("PARAMETER RECOMMENDATIONS")
-    print("="*80)
     print(f"\nFor {actual_size:,} records:")
     print(f"  Conservative (fewer patterns):  min_support >= {min_support_high}")
     print(f"  Balanced:                       min_support = {(min_support_low + min_support_high)//2}")
